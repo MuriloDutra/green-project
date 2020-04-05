@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { SafeAreaView, StyleSheet, ScrollView, Text, StatusBar, TextInput, View, TouchableOpacity, Modal, Image } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, StatusBar, TextInput, View, TouchableOpacity, Modal, Image } from 'react-native'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import LottieView from 'lottie-react-native'
+import OptionsModal from './components/OptionsModal'
 
 const App = () => {
-  const [modalVisible, setModalVisible] = useState(false)
+  const [optionsModalVisible, setOptionsModalVisible] = useState(false)
   const [backgroundModal, setBackgroundModal] = useState(false)
   const [messageError, setMessageError] = useState(null)
   
@@ -16,7 +17,7 @@ const App = () => {
 
 
   const toggleModal = (value, text) => {
-    setModalVisible(value)
+    setOptionsModalVisible(value)
     setBackgroundModal(value)
 
     if(text)
@@ -30,52 +31,46 @@ const App = () => {
     let isThereAMessage = false
 
     inputs.map((input, index) => {
-      if(input == null || input == 'Medida' || input == '' && !isThereAMessage){
+      if(input == null || input == 'Medida' || input == ''){
+        if(isThereAMessage)
+          return
+
         setMessageError(errors[index])
         isThereAMessage = true
       }
     })
     
-    setTimeout(() => setMessageError(null), 3000)
+    setTimeout(() => setMessageError(null), 5000)
+
+    if(!isThereAMessage && !messageError){
+      setMessageError(null)
+      showAlert()
+    }
   }
 
+  const showAlert = () => {
+    
+  }
 
   return (
       <SafeAreaView style={styles.scrollView}>
         <StatusBar barStyle="light-content" />
         <Text style={styles.title}>Reciclick</Text>
-        <ScrollView contentInsetAdjustmentBehavior="automatic">
-          <TextInput onChangeText={(number) => setStudentRA(number)} keyboardType='numeric' maxLength={10} placeholderTextColor="gray" placeholder='Preencha o RA' style={[styles.RAinput, styles.input, { marginTop: '20%',}]} />
-          <TextInput onChangeText={(text) => setProduct(text)} placeholderTextColor="gray" placeholder='Preencha o produto' style={[styles.productInput, styles.input]}/>
+        <TextInput onChangeText={(number) => setStudentRA(number)} keyboardType='numeric' maxLength={10} placeholderTextColor="gray" placeholder='Preencha o RA' style={[styles.RAinput, styles.input, { marginTop: '20%',}]} />
+        <TextInput onChangeText={(text) => setProduct(text)} placeholderTextColor="gray" placeholder='Preencha o produto' style={[styles.productInput, styles.input]}/>
 
-          <View style={styles.panel}>
-            <TextInput onChangeText={(number) => setQuantity(number)} keyboardType="numeric" placeholderTextColor="gray" placeholder='Quantidade' style={[styles.quantityInput, styles.input]}/>
-            <TouchableOpacity style={[styles.measureButton, styles.input]} onPress={() => toggleModal(true)}>
-              <Text style={styles.measureText}>{ measureOption }</Text>
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity style={styles.recycleButton} onPress={() => verifyInputs()}>
-            <Text style={styles.textButton}>RECICLAR</Text>
+        <View style={styles.panel}>
+          <TextInput onChangeText={(number) => setQuantity(number)} keyboardType="numeric" placeholderTextColor="gray" placeholder='Quantidade' style={[styles.quantityInput, styles.input]}/>
+          <TouchableOpacity style={[styles.measureButton, styles.input]} onPress={() => toggleModal(true)}>
+            <Text style={styles.measureText}>{ measureOption }</Text>
           </TouchableOpacity>
+        </View>
 
-          <Modal animationType='slide' visible={modalVisible} transparent={true}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalTitle}>Escolha a unidade de medida</Text>
-              <View style={styles.ModalTouchablesView}>
-                <TouchableOpacity onPress={() => toggleModal(false, 'g')} style={styles.modalTouchable}>
-                  <Text style={styles.modalTouchableText}>(g)</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => toggleModal(false, 'kg')} style={styles.modalTouchable}>
-                  <Text style={styles.modalTouchableText}>(kg)</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => toggleModal(false)} style={[styles.modalTouchable, styles.cancelButton]}>
-                  <Text style={[styles.modalTouchableText, {color: 'white'}]}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-        </ScrollView>
+        <TouchableOpacity style={styles.recycleButton} onPress={() => verifyInputs()}>
+          <Text style={styles.textButton}>RECICLAR</Text>
+        </TouchableOpacity>
+
+        <OptionsModal modalVisible={optionsModalVisible} toggleModal={toggleModal}/>
 
         { backgroundModal &&
             <View style={{flex: 1, backgroundColor: 'black', height: '100%', width: '100%', position: 'absolute', opacity: 0.5}} />
@@ -85,8 +80,7 @@ const App = () => {
             <Text style={styles.messageError}>{messageError}</Text>
           </View>
         }
-
-        <Image style={{height: '20%', width: '100%'}} source={require('./images/leafs.png')} />
+        <Image style={{height: '20%', width: '100%', marginTop: '10%'}} source={require('./images/leafs.png')} />
       </SafeAreaView>
   );
 };
@@ -146,41 +140,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 20,
     color: 'white'
-  },
-  modalView: {
-    marginTop: '60%',
-    width: '90%',
-    height: '35%',
-    backgroundColor: 'white',
-    marginLeft: '5%',
-    borderRadius: 20,
-    borderWidth: 0.5,
-    flexDirection: 'column',
-    justifyContent: 'space-between'
-  },
-  modalTitle: {
-    textAlign: 'center',
-    fontSize: 22,
-    paddingTop: 25
-  },
-  ModalTouchablesView: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-  },
-  modalTouchable: {
-    height: 'auto',
-    borderWidth: 0.5
-  },
-  cancelButton: {
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    backgroundColor: 'black'
-  },
-  modalTouchableText: {
-    textAlign: 'center',
-    fontSize: 25,
-    paddingVertical: 10
   },
   messageError: {
     fontSize: 20,
