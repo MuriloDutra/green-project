@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { SafeAreaView, StyleSheet, Text, StatusBar, TextInput, View, TouchableOpacity, Modal, Image } from 'react-native'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
-import LottieView from 'lottie-react-native'
 import OptionsModal from './components/OptionsModal'
+import SuccessfulModal from './components/SuccessfulModal'
 
 const App = () => {
   const [optionsModalVisible, setOptionsModalVisible] = useState(false)
+  const [successfulModal, setSuccessfulModal] = useState(false)
   const [backgroundModal, setBackgroundModal] = useState(false)
   const [messageError, setMessageError] = useState(null)
   
@@ -21,7 +22,7 @@ const App = () => {
     setBackgroundModal(value)
 
     if(text)
-      setMeasureOption(`(${text})`)
+      setMeasureOption(text)
   }
 
 
@@ -44,12 +45,13 @@ const App = () => {
 
     if(!isThereAMessage && !messageError){
       setMessageError(null)
-      showAlert()
+      toggleSuccessfulModal(true)
     }
   }
 
-  const showAlert = () => {
-    
+  const toggleSuccessfulModal = (value) => {
+    setSuccessfulModal(value)
+    setBackgroundModal(value)
   }
 
   return (
@@ -62,7 +64,7 @@ const App = () => {
         <View style={styles.panel}>
           <TextInput onChangeText={(number) => setQuantity(number)} keyboardType="numeric" placeholderTextColor="gray" placeholder='Quantidade' style={[styles.quantityInput, styles.input]}/>
           <TouchableOpacity style={[styles.measureButton, styles.input]} onPress={() => toggleModal(true)}>
-            <Text style={styles.measureText}>{ measureOption }</Text>
+            <Text style={styles.measureText}>{ measureOption == 'Medida' ? `${measureOption}` :`(${measureOption})` }</Text>
           </TouchableOpacity>
         </View>
 
@@ -71,6 +73,7 @@ const App = () => {
         </TouchableOpacity>
 
         <OptionsModal modalVisible={optionsModalVisible} toggleModal={toggleModal}/>
+        <SuccessfulModal product={product} quantity={quantity} measureOption={measureOption} modalVisible={successfulModal} toggleModal={toggleSuccessfulModal}/>
 
         { backgroundModal &&
             <View style={{flex: 1, backgroundColor: 'black', height: '100%', width: '100%', position: 'absolute', opacity: 0.5}} />

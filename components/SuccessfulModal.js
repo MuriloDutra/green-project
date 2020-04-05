@@ -1,23 +1,19 @@
 import React from 'react'
 import { Text, View, TouchableOpacity, Modal, StyleSheet } from 'react-native'
+import LottieView from 'lottie-react-native'
 
-const OptionsModal = (props) => {
+const SuccessfulModal = (props) => {
     return (
         <Modal animationType='slide' visible={props.modalVisible} transparent={true}>
           <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Escolha a unidade de medida</Text>
+            <Text style={styles.modalTitle}>
+                {`Parabéns, você acabou de reciclar ${props.quantity}${props.measureOption} de ${props.product}`}
+            </Text>
 
+            <LottieView source={require('../animations/trash-successfully.json')} autoPlay loop={false} />
             <View style={styles.ModalTouchablesView}>
-              <TouchableOpacity onPress={() => props.toggleModal(false, 'g')} style={styles.modalTouchable}>
-                <Text style={styles.modalTouchableText}>(g)</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => props.toggleModal(false, 'kg')} style={styles.modalTouchable}>
-                <Text style={styles.modalTouchableText}>(kg)</Text>
-              </TouchableOpacity>
-              
               <TouchableOpacity onPress={() => props.toggleModal(false)} style={[styles.modalTouchable, styles.cancelButton]}>
-                <Text style={[styles.modalTouchableText, {color: 'white'}]}>Cancelar</Text>
+                <Text style={[styles.modalTouchableText, {color: 'white'}]}>Ok</Text>
               </TouchableOpacity>
             </View>
 
@@ -26,7 +22,7 @@ const OptionsModal = (props) => {
     )
 }
 
-export default OptionsModal
+export default SuccessfulModal
 
 const styles = StyleSheet.create({
     modalView: {
@@ -41,8 +37,8 @@ const styles = StyleSheet.create({
     },
     modalTitle: {
         textAlign: 'center',
-        fontSize: 22,
-        paddingTop: 25
+        fontSize: 20,
+        paddingTop: 25,
     },
     ModalTouchablesView: {
         position: 'absolute',
