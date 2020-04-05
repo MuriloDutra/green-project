@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { SafeAreaView, StyleSheet, ScrollView, Text, StatusBar, TextInput, View, TouchableOpacity, Modal, Animated, Easing } from 'react-native'
+import { SafeAreaView, StyleSheet, ScrollView, Text, StatusBar, TextInput, View, TouchableOpacity, Modal, Image } from 'react-native'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import LottieView from 'lottie-react-native'
 
@@ -7,7 +7,6 @@ const App = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [backgroundModal, setBackgroundModal] = useState(false)
   const [messageError, setMessageError] = useState(null)
-  const [progressAnimation, setProgressAnimation] = useState(new Animated.Value(0))
   
   //User's data
   const [studentRA, setStudentRA] = useState(null) //number
@@ -37,7 +36,7 @@ const App = () => {
       }
     })
     
-    setTimeout(() => setMessageError(null), 500)
+    setTimeout(() => setMessageError(null), 3000)
   }
 
 
@@ -76,7 +75,6 @@ const App = () => {
               </View>
             </View>
           </Modal>
-          <Text>ISOLAR CERTAS PARTES DO CSS, POR EXEMPLO, O TAMANHO DAS FONTES</Text>
         </ScrollView>
 
         { backgroundModal &&
@@ -87,7 +85,8 @@ const App = () => {
             <Text style={styles.messageError}>{messageError}</Text>
           </View>
         }
-        <LottieView source={require('./animation/10548-forest.json')} progress={progressAnimation}/>
+
+        <Image style={{height: '20%', width: '100%'}} source={require('./images/leafs.png')} />
       </SafeAreaView>
   );
 };
@@ -194,7 +193,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    height: '6%'
+    height: '6%',
+    zIndex: 1
   }
 });
 
